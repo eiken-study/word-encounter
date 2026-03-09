@@ -5878,10 +5878,19 @@ function highlight(text, target){
     if (part.startsWith('<')) return part;
     if(target){
       const base = target.toLowerCase();
-      const forms = [base,base+'s',base+'ed',base+'ing',base+'er',base+'d',
-                     base.replace(/e$/,'ing'),base.replace(/y$/,'ied'),base.replace(/e$/,'ed')]
-        .filter((f,i,a)=>a.indexOf(f)===i).sort((a,b)=>b.length-a.length);
-      const re = new RegExp('\\b('+forms.map(escR).join('|')+')\\b','gi');
+      const lastC = base.slice(-1);
+      const vowels = 'aeiou';
+      const len = base.length;
+      const doubleC = (len >= 3 && !vowels.includes(lastC) && vowels.includes(base[len-2]))
+        ? base + lastC : null;
+      const forms = [
+        base, base+'s', base+'ed', base+'ing', base+'er', base+'d', base+'ly',
+        base.replace(/e$/,'ing'), base.replace(/e$/,'ed'), base.replace(/e$/,'er'),
+        base.replace(/y$/,'ied'), base.replace(/y$/,'ies'),
+        base.replace(/f$/,'ves'), base.replace(/fe$/,'ves'),
+        ...(doubleC ? [doubleC+'ed', doubleC+'ing', doubleC+'er'] : [])
+      ].filter((f,i,a) => f && a.indexOf(f)===i).sort((a,b) => b.length-a.length);
+      const re = new RegExp('(?<![a-zA-Z])('+forms.map(escR).join('|')+')(?![a-zA-Z])','gi');
       part = part.replace(re, match => `<span class="tw target-word" data-word="${base}">${match}</span>`);
     }
     sorted.forEach(v => {
