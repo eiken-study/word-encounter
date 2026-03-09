@@ -5914,7 +5914,7 @@ function renderCard(){
   const b = blocks[idx];
   document.getElementById('card-source-en').textContent = b.label;
   document.getElementById('card-body-en').innerHTML = highlight(b.en||'', b.target||null);
-  document.getElementById('card-body-ja').textContent = b.ja;
+  document.getElementById('card-body-ja').innerHTML = highlight(b.ja||'', b.target||null);
   document.getElementById('card-en').style.display = showingJa ? 'none' : 'block';
   document.getElementById('card-ja').style.display = showingJa ? 'block' : 'none';
   document.getElementById('card-progress').textContent = `${idx+1} / ${blocks.length}`;
